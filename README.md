@@ -17,7 +17,7 @@ It provides two benefits over using the last.fm REST API directly
 -	[LastfmClient](http://www.github.com/asciamanna/LastfmClient "LastfmClient") (my last.fm REST client also on github)
 
 ## Contact
-Anthony Sciamanna  
+**Anthony Sciamanna**  
 Email: asciamanna@gmail.com  
 Web: [http://www.anthonysciamanna.com](http://www.anthonysciamanna.com)  
 Twitter: @asciamanna
