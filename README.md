@@ -18,6 +18,6 @@ It provides two benefits over using the last.fm REST API directly
 
 ## Contact
 **Anthony Sciamanna**  
-Email: asciamanna@gmail.com  
-Web: [http://www.anthonysciamanna.com](http://www.anthonysciamanna.com)  
-Twitter: @asciamanna
+**Email:** asciamanna@gmail.com  
+**Web:** [http://www.anthonysciamanna.com](http://www.anthonysciamanna.com)  
+**Twitter:** @asciamanna
