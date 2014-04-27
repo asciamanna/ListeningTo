@@ -20,7 +20,7 @@ namespace ListeningTo.Controllers {
     }
 
     public IEnumerable<LastfmUserRecentTrack> GetRecentTracks([FromUri] int count = 25) {
-      var recentTracks = new LastfmUserRepository().FindRecentTracks(count);
+      var recentTracks = repository.FindRecentTracks(count);
       foreach (var track in recentTracks) {
         track.LastPlayed = ConvertToLocal(track.LastPlayed);
       }
