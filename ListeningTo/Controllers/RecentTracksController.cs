@@ -9,14 +9,33 @@ using LastfmClient;
 using LastfmClient.Responses;
 using ListeningTo.Repositories;
 
-namespace ListeningTo.Controllers
-{
-    public class RecentTracksController : ApiController
-    {
-      public IEnumerable<LastfmUserRecentTrack> GetRecentTracks([FromUri] int count = 25) {
-        
-        var recentTracks = new LastfmUserRepository().FindRecentTracks(count);
-        return recentTracks;
-      }
+namespace ListeningTo.Controllers {
+  public class RecentTracksController : ApiController {
+    readonly ILastfmUserRepository repository;
+
+    public RecentTracksController() : this(new LastfmUserRepository()) { }
+
+    public RecentTracksController(ILastfmUserRepository repository) {
+      this.repository = repository;
     }
+
+    public IEnumerable<LastfmUserRecentTrack> GetRecentTracks([FromUri] int count = 25) {
+      var recentTracks = new LastfmUserRepository().FindRecentTracks(count);
+      foreach (var track in recentTracks) {
+        track.LastPlayed = ConvertToLocal(track.LastPlayed);
+      }
+      return recentTracks;
+    }
+
+    static DateTime? ConvertToLocal(DateTime? date) {
+      if (date == null) {
+        return null;
+      }
+      if (date.Value.Kind == DateTimeKind.Utc) {
+        var easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+        return DateTime.SpecifyKind(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date.Value, DateTimeKind.Utc), easternZone), DateTimeKind.Local);
+      }
+      else return date;
+    }
+  }
 }
