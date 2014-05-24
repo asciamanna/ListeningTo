@@ -18,8 +18,12 @@ namespace ListeningTo.Controllers {
       this.repository = repository;
     }
 
-    public IEnumerable<LastfmUserTopArtist> GetTopArtists([FromUri] int count = 25) {
-      return repository.FindTopArtists(count);
+    public IHttpActionResult GetTopArtists([FromUri] int count = 25) {
+      var topArtists = repository.FindTopArtists(count);
+      if (topArtists.Any()) {
+        return Ok(topArtists);
+      }
+      return NotFound();
     }
   }
 }
