@@ -36,7 +36,8 @@ namespace ListeningTo.Controllers {
       }
       if (date.Value.Kind == DateTimeKind.Utc) {
         var easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-        return DateTime.SpecifyKind(TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(date.Value, DateTimeKind.Utc), easternZone), DateTimeKind.Unspecified);
+        var utcTime = DateTime.SpecifyKind(date.Value, DateTimeKind.Utc);
+        return TimeZoneInfo.ConvertTimeFromUtc(utcTime, easternZone);
       }
       else return date;
     }
