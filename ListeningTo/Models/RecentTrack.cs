@@ -20,13 +20,17 @@ namespace ListeningTo.Models {
            new RecentTrack {
              Album = track.Album,
              Artist = track.Artist,
-             AlbumArtLocation = track.AlbumArtLocation,
+             AlbumArtLocation = track.LargeAlbumArtLocation,
              Name = track.Name,
-             LastPlayed = ConvertToLocalString(track.LastPlayed)
+             LastPlayed = PopulateLastPlayed(track)
            }
         );
       }
       return recentTracks;
+    }
+
+    private static string PopulateLastPlayed(LastfmUserRecentTrack track) {
+      return track.IsNowPlaying ? "Now Playing" : ConvertToLocalString(track.LastPlayed);
     }
     static string ConvertToLocalString(DateTime? date) {
       if (!date.HasValue) {

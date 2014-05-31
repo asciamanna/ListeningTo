@@ -7,6 +7,7 @@ using System.Web.Http;
 using LastfmClient.Responses;
 using LastfmClient;
 using ListeningTo.Repositories;
+using ListeningTo.Models;
 
 namespace ListeningTo.Controllers {
   public class TopArtistsController : ApiController {
@@ -19,7 +20,7 @@ namespace ListeningTo.Controllers {
     }
 
     public IHttpActionResult GetTopArtists([FromUri] int count = 25) {
-      var topArtists = repository.FindTopArtists(count);
+      var topArtists = TopArtist.FromLastfmObjects(repository.FindTopArtists(count));
       if (topArtists.Any()) {
         return Ok(topArtists);
       }
