@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace ListeningToTests.Models {
   [TestFixture]
-  public class TopArtistTests {
+  public class TopArtistTest {
     [Test]
     public void FromLastfmObjects() {
       var lastfmTopArtists = new List<LastfmUserTopArtist> {

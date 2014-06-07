@@ -10,7 +10,7 @@ using Rhino.Mocks;
 
 namespace ListeningToTests {
   [TestFixture]
-  public class LastfmUserRepositoryTests {
+  public class LastfmUserRepositoryTest {
     [Test]
     public void FindRecentTracks_Adds_Results_To_Cache_And_Returns_Them() {
       var service = MockRepository.GenerateStub<ILastfmService>();

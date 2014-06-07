@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace ListeningToTests.Models {
   [TestFixture]
-  public class RecentTrackTests {
+  public class RecentTrackTest {
     [Test]
     public void FromLastfmObject_Converts_UTCTime_To_Eastern_As_A_String() {
       var expectedUtcDate = new DateTime(2014, 5, 26, 6, 40, 0, DateTimeKind.Utc);
@@ -29,7 +29,8 @@ namespace ListeningToTests.Models {
       Assert.That(result.Name, Is.EqualTo(expected.Name));
       Assert.That(result.Artist, Is.EqualTo(expected.Artist));
       Assert.That(result.LastPlayed.StartsWith("Monday, May 26, 2014"));
-
     }
+
+    //TODO Test now playing
   }
 }
