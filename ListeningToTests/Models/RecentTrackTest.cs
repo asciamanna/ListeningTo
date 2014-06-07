@@ -10,7 +10,7 @@ namespace ListeningToTests.Models {
   [TestFixture]
   public class RecentTrackTest {
     [Test]
-    public void FromLastfmObject_Converts_UTCTime_To_Eastern_As_A_String() {
+    public void FromLastfmObjects() {
       var expectedUtcDate = new DateTime(2014, 5, 26, 6, 40, 0, DateTimeKind.Utc);
 
       var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
@@ -28,7 +28,37 @@ namespace ListeningToTests.Models {
       Assert.That(result.AlbumArtLocation, Is.EqualTo(expected.LargeAlbumArtLocation));
       Assert.That(result.Name, Is.EqualTo(expected.Name));
       Assert.That(result.Artist, Is.EqualTo(expected.Artist));
-      Assert.That(result.LastPlayed.StartsWith("Monday, May 26, 2014"));
+      Assert.That(result.LastPlayed, Is.StringStarting("Monday, May 26, 2014"));
+    }
+
+    [Test]
+    public void FromLastfmObjects_Converts_UTC_Time_To_Eastern_Local() {
+      var utcDate = new DateTime(2014, 6, 7, 8, 55, 0, DateTimeKind.Utc);
+      var expectedLocalDate = DetermineExpectedDate();
+      
+      var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
+        new LastfmUserRecentTrack { LastPlayed = utcDate }
+      };
+      var convertedDate = RecentTrack.FromLastfmObjects(lastfmRecentTracks).First().LastPlayed;
+
+      Assert.That(convertedDate, Is.EqualTo(expectedLocalDate.ToString("f")));
+    }
+
+    [Test]
+    public void FromLastfmObjects_Shows_Now_Playing_As_Last_Played_String() {
+      var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
+        new LastfmUserRecentTrack { IsNowPlaying = true }
+      };
+      var track = RecentTrack.FromLastfmObjects(lastfmRecentTracks).First();
+
+      Assert.That(track.LastPlayed, Is.EqualTo("Now Playing"));
+    }
+
+    private static DateTime DetermineExpectedDate() {
+      var expectedLocalDateDaylightSavingsTime = new DateTime(2014, 6, 7, 4, 55, 0, DateTimeKind.Local);
+      var expectedLocalDateStandardTime = expectedLocalDateDaylightSavingsTime.AddHours(1);
+      var isDaylightSavingsTime = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time").IsDaylightSavingTime(DateTime.Now);
+      return isDaylightSavingsTime ? expectedLocalDateDaylightSavingsTime : expectedLocalDateStandardTime;
     }
 
     //TODO Test now playing

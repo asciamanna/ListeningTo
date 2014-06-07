@@ -41,7 +41,6 @@ namespace ListeningToTests.Controllers {
     [Test]
     public void GetTopArtists_Returns_NotFound_If_No_Artists_Are_Found() {
       var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
-
       repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Return(new List<LastfmUserTopArtist>());
 
       Assert.That(new TopArtistsController(repository).GetTopArtists(), Is.InstanceOf<NotFoundResult>());
