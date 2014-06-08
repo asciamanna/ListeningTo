@@ -21,11 +21,17 @@ namespace ListeningTo.Controllers {
     }
 
     public IHttpActionResult GetRecentTracks([FromUri] int count = 25) {
-      var recentTracks = RecentTrack.FromLastfmObjects(repository.FindRecentTracks(count));
-      if (recentTracks.Any()) {
-        return Ok(recentTracks);
+      try {
+        var recentTracks = RecentTrack.FromLastfmObjects(repository.FindRecentTracks(count));
+        if (recentTracks.Any()) {
+          return Ok(recentTracks);
+        }
+        return NotFound();
       }
-      return NotFound();
+      catch (Exception e) {
+        return InternalServerError(e);
+      
+      }
     }
   }
 }

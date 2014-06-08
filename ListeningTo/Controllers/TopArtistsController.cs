@@ -13,18 +13,23 @@ namespace ListeningTo.Controllers {
   public class TopArtistsController : ApiController {
     ILastfmUserRepository repository;
 
-    public TopArtistsController() : this(new LastfmUserRepository()) {}
+    public TopArtistsController() : this(new LastfmUserRepository()) { }
 
     public TopArtistsController(ILastfmUserRepository repository) {
       this.repository = repository;
     }
 
     public IHttpActionResult GetTopArtists([FromUri] int count = 25) {
-      var topArtists = TopArtist.FromLastfmObjects(repository.FindTopArtists(count));
-      if (topArtists.Any()) {
-        return Ok(topArtists);
+      try {
+        var topArtists = TopArtist.FromLastfmObjects(repository.FindTopArtists(count));
+        if (topArtists.Any()) {
+          return Ok(topArtists);
+        }
+        return NotFound();
       }
-      return NotFound();
+      catch (Exception e) {
+        return InternalServerError(e);
+      }
     }
   }
 }

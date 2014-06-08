@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Http.Results;
 using LastfmClient.Responses;
@@ -44,6 +45,21 @@ namespace ListeningToTests.Controllers {
       repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Return(new List<LastfmUserTopArtist>());
 
       Assert.That(new TopArtistsController(repository).GetTopArtists(), Is.InstanceOf<NotFoundResult>());
+    }
+
+    [Test]
+    public void GetTopArtists_Returns_Error_If_Exception_Occurs() {
+      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+
+      var controller = new TopArtistsController(repository);
+      //throw web exception because this is what the web client will throw if the Last.fm service is down 
+      var exception = new WebException();
+      repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Throw(exception);
+
+      var result = controller.GetTopArtists();
+
+      Assert.That(result, Is.InstanceOf<ExceptionResult>());
+      Assert.That((result as ExceptionResult).Exception, Is.SameAs(exception));
     }
   }
 }
