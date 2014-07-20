@@ -52,14 +52,13 @@ namespace ListeningToTests.Controllers {
       var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
 
       var controller = new TopArtistsController(repository);
-      //throw web exception because this is what the web client will throw if the Last.fm service is down 
-      var exception = new WebException();
-      repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Throw(exception);
+      var exceptionWhenLastfmIsDown = new WebException();
+      repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Throw(exceptionWhenLastfmIsDown);
 
       var result = controller.GetTopArtists();
 
       Assert.That(result, Is.InstanceOf<ExceptionResult>());
-      Assert.That((result as ExceptionResult).Exception, Is.SameAs(exception));
+      Assert.That((result as ExceptionResult).Exception, Is.SameAs(exceptionWhenLastfmIsDown));
     }
   }
 }
