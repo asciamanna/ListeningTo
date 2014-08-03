@@ -26,5 +26,13 @@ namespace ListeningToTests.Models {
       Assert.That(actualArtist.Rank, Is.EqualTo(expectedArtist.Rank));
       Assert.That(actualArtist.PlayCount, Is.EqualTo(expectedArtist.PlayCount));
     }
+
+    [Test]
+    public void FromLastfmObjects_When_There_Are_No_TopArtists_Returns_Empty_List() {
+      var lastfmTopArtists = new List<LastfmUserTopArtist>();
+
+      var results = TopArtist.FromLastfmObjects(lastfmTopArtists);
+      CollectionAssert.IsEmpty(results);
+    }
   }
 }

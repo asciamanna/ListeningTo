@@ -54,13 +54,19 @@ namespace ListeningToTests.Models {
       Assert.That(track.LastPlayed, Is.EqualTo("Now Playing"));
     }
 
+    [Test]
+    public void FromLastfmObjects_When_There_Are_No_RecentTracks_Returns_Empty_List() {
+      var lastfmRecentTracks = new List<LastfmUserRecentTrack>();
+
+      var results = RecentTrack.FromLastfmObjects(lastfmRecentTracks);
+      CollectionAssert.IsEmpty(results);
+    }
+
     private static DateTime DetermineExpectedDate() {
       var expectedLocalDateDaylightSavingsTime = new DateTime(2014, 6, 7, 4, 55, 0, DateTimeKind.Local);
       var expectedLocalDateStandardTime = expectedLocalDateDaylightSavingsTime.AddHours(1);
       var isDaylightSavingsTime = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time").IsDaylightSavingTime(DateTime.Now);
       return isDaylightSavingsTime ? expectedLocalDateDaylightSavingsTime : expectedLocalDateStandardTime;
     }
-
-    //TODO Test now playing
   }
 }
