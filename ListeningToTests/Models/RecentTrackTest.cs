@@ -10,7 +10,7 @@ namespace ListeningToTests.Models {
   [TestFixture]
   public class RecentTrackTest {
     [Test]
-    public void FromLastfmObjects() {
+    public void FromRepositoryObjects() {
       var expectedUtcDate = new DateTime(2014, 5, 26, 6, 40, 0, DateTimeKind.Utc);
 
       var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
@@ -18,7 +18,7 @@ namespace ListeningToTests.Models {
           new LastfmUserRecentTrack { Album = "Freedom Of Choice", LargeAlbumArtLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
         };
 
-      var results = RecentTrack.FromLastfmObjects(lastfmRecentTracks);
+      var results = RecentTrack.FromRepositoryObjects(lastfmRecentTracks);
 
       Assert.That(results.Count(), Is.EqualTo(lastfmRecentTracks.Count()));
       var result = results.First();
@@ -32,33 +32,33 @@ namespace ListeningToTests.Models {
     }
 
     [Test]
-    public void FromLastfmObjects_Converts_UTC_Time_To_Eastern_Local() {
+    public void FromRepositoryObjects_Converts_UTC_Time_To_Eastern_Local() {
       var utcDate = new DateTime(2014, 6, 7, 8, 55, 0, DateTimeKind.Utc);
       var expectedLocalDate = DetermineExpectedDate();
       
       var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
         new LastfmUserRecentTrack { LastPlayed = utcDate }
       };
-      var convertedDate = RecentTrack.FromLastfmObjects(lastfmRecentTracks).First().LastPlayed;
+      var convertedDate = RecentTrack.FromRepositoryObjects(lastfmRecentTracks).First().LastPlayed;
 
       Assert.That(convertedDate, Is.EqualTo(expectedLocalDate.ToString("f")));
     }
 
     [Test]
-    public void FromLastfmObjects_Shows_Now_Playing_As_Last_Played_String() {
+    public void FromRepositoryObjects_Shows_Now_Playing_As_Last_Played_String() {
       var lastfmRecentTracks = new List<LastfmUserRecentTrack> {
         new LastfmUserRecentTrack { IsNowPlaying = true }
       };
-      var track = RecentTrack.FromLastfmObjects(lastfmRecentTracks).First();
+      var track = RecentTrack.FromRepositoryObjects(lastfmRecentTracks).First();
 
       Assert.That(track.LastPlayed, Is.EqualTo("Now Playing"));
     }
 
     [Test]
-    public void FromLastfmObjects_When_There_Are_No_RecentTracks_Returns_Empty_List() {
+    public void FromRepositoryObjects_When_There_Are_No_RecentTracks_Returns_Empty_List() {
       var lastfmRecentTracks = new List<LastfmUserRecentTrack>();
 
-      var results = RecentTrack.FromLastfmObjects(lastfmRecentTracks);
+      var results = RecentTrack.FromRepositoryObjects(lastfmRecentTracks);
       CollectionAssert.IsEmpty(results);
     }
 

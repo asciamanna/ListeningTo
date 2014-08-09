@@ -10,13 +10,13 @@ namespace ListeningToTests.Models {
   [TestFixture]
   public class TopArtistTest {
     [Test]
-    public void FromLastfmObjects() {
+    public void FromRepositoryObjects() {
       var lastfmTopArtists = new List<LastfmUserTopArtist> {
           new LastfmUserTopArtist { Name = "Miles Davis", PlayCount = 3500, Rank = 1, LargeArtistImageLocation = "here" },
           new LastfmUserTopArtist { Name = "Devo", PlayCount = 3000, Rank = 2, LargeArtistImageLocation = "there" }
         };
 
-      var results = TopArtist.FromLastfmObjects(lastfmTopArtists);
+      var results = TopArtist.FromRepositoryObjects(lastfmTopArtists);
       Assert.That(results.Count(), Is.EqualTo(lastfmTopArtists.Count()));
 
       var expectedArtist = lastfmTopArtists.First();
@@ -28,10 +28,10 @@ namespace ListeningToTests.Models {
     }
 
     [Test]
-    public void FromLastfmObjects_When_There_Are_No_TopArtists_Returns_Empty_List() {
+    public void FromRepositoryObjects_When_There_Are_No_TopArtists_Returns_Empty_List() {
       var lastfmTopArtists = new List<LastfmUserTopArtist>();
 
-      var results = TopArtist.FromLastfmObjects(lastfmTopArtists);
+      var results = TopArtist.FromRepositoryObjects(lastfmTopArtists);
       CollectionAssert.IsEmpty(results);
     }
   }

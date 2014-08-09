@@ -13,7 +13,7 @@ namespace ListeningTo.Models {
     public string AlbumArtLocation { get; set; }
     public string LastPlayed { get; set; }
 
-    public static IEnumerable<RecentTrack> FromLastfmObjects(IEnumerable<LastfmUserRecentTrack> lastfmRecentTracks) {
+    public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<LastfmUserRecentTrack> lastfmRecentTracks) {
       var recentTracks = new List<RecentTrack>();
       foreach (var track in lastfmRecentTracks) {
         recentTracks.Add(

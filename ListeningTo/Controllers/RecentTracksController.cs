@@ -22,7 +22,7 @@ namespace ListeningTo.Controllers {
 
     public IHttpActionResult GetRecentTracks([FromUri] int count = 25) {
       try {
-        var recentTracks = RecentTrack.FromLastfmObjects(repository.FindRecentTracks(count));
+        var recentTracks = RecentTrack.FromRepositoryObjects(repository.FindRecentTracks(count));
         if (recentTracks.Any()) {
           return Ok(recentTracks);
         }

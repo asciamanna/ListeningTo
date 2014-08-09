@@ -11,7 +11,7 @@ namespace ListeningTo.Models {
     public int PlayCount { get; set; }
     public string ArtistImageLocation { get; set; }
 
-    public static IEnumerable<TopArtist> FromLastfmObjects(IEnumerable<LastfmUserTopArtist> lastfmTopArtists) {
+    public static IEnumerable<TopArtist> FromRepositoryObjects(IEnumerable<LastfmUserTopArtist> lastfmTopArtists) {
       var topArtists = new List<TopArtist>();
       foreach (var artist in lastfmTopArtists) {
         topArtists.Add(

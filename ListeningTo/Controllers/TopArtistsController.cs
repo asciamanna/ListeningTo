@@ -21,7 +21,7 @@ namespace ListeningTo.Controllers {
 
     public IHttpActionResult GetTopArtists([FromUri] int count = 25) {
       try {
-        var topArtists = TopArtist.FromLastfmObjects(repository.FindTopArtists(count));
+        var topArtists = TopArtist.FromRepositoryObjects(repository.FindTopArtists(count));
         if (topArtists.Any()) {
           return Ok(topArtists);
         }
