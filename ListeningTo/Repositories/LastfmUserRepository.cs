@@ -23,20 +23,16 @@ namespace ListeningTo.Repositories {
     }
 
     public IEnumerable<CombinedRecentTrack> FindRecentTracks(int count) {
-      var cachedTracks = cache.Get(RecentTracksCacheKey);
       var recentTracks = new List<CombinedRecentTrack>();
+      var cachedTracks = cache.Get(RecentTracksCacheKey);
 
       if (cachedTracks == null) {
         var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
         recentTracks = lastfmRecentTracks.Select(rt => CombinedRecentTrack.FromLastFmObject(rt)).ToList();
 
         if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
-          var playingFrom = service.FindCurrentlyPlayingFrom(Config.Instance.LastFmUser);
-          var currentTrack = recentTracks.First(rt => rt.IsNowPlaying);
-          currentTrack.MusicServiceName = playingFrom.MusicServiceName;
-          currentTrack.MusicServiceUrl = playingFrom.MusicServiceUrl;
+          ApplyPlayingFromInformation(recentTracks);
         }
-
         cache.Insert(RecentTracksCacheKey, recentTracks);
       }
       else {
@@ -45,9 +41,16 @@ namespace ListeningTo.Repositories {
       return recentTracks;
     }
 
+    private void ApplyPlayingFromInformation(List<CombinedRecentTrack> recentTracks) {
+      var playingFrom = service.FindCurrentlyPlayingFrom(Config.Instance.LastFmUser);
+      var currentTrack = recentTracks.First(rt => rt.IsNowPlaying);
+      currentTrack.MusicServiceName = playingFrom.MusicServiceName;
+      currentTrack.MusicServiceUrl = playingFrom.MusicServiceUrl;
+    }
+
     public IEnumerable<LastfmUserTopArtist> FindTopArtists(int count) {
-      var cachedArtists = cache.Get(TopArtistsCacheKey);
       var topArtists = new List<LastfmUserTopArtist>();
+      var cachedArtists = cache.Get(TopArtistsCacheKey);
 
       if (cachedArtists == null) {
         topArtists = service.FindTopArtists(Config.Instance.LastFmUser, count);
