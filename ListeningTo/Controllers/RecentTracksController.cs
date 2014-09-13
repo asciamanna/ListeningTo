@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Caching;
 using System.Web.Http;
-using LastfmClient;
-using LastfmClient.Responses;
 using ListeningTo.Models;
 using ListeningTo.Repositories;
 
@@ -30,7 +24,6 @@ namespace ListeningTo.Controllers {
       }
       catch (Exception e) {
         return InternalServerError(e);
-      
       }
     }
   }

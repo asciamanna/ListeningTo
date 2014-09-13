@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using LastfmClient.Responses;
-using LastfmClient;
-using ListeningTo.Repositories;
 using ListeningTo.Models;
+using ListeningTo.Repositories;
 
 namespace ListeningTo.Controllers {
   public class TopArtistsController : ApiController {

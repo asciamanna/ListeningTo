@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using LastfmClient;
 using LastfmClient.Responses;
 
 namespace ListeningTo.Repositories {
   public interface ILastfmUserRepository {
-    IEnumerable<LastfmUserRecentTrack> FindRecentTracks(int count);
+    IEnumerable<CombinedRecentTrack> FindRecentTracks(int count);
     IEnumerable<LastfmUserTopArtist> FindTopArtists(int count);
   }
 
@@ -23,16 +21,26 @@ namespace ListeningTo.Repositories {
       this.service = service;
       this.cache = cache;
     }
-    public IEnumerable<LastfmUserRecentTrack> FindRecentTracks(int count) {
+
+    public IEnumerable<CombinedRecentTrack> FindRecentTracks(int count) {
       var cachedTracks = cache.Get(RecentTracksCacheKey);
-      var recentTracks = new List<LastfmUserRecentTrack>();
+      var recentTracks = new List<CombinedRecentTrack>();
 
       if (cachedTracks == null) {
-        recentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
+        var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
+        recentTracks = lastfmRecentTracks.Select(rt => CombinedRecentTrack.FromLastFmObject(rt)).ToList();
+
+        if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
+          var playingFrom = service.FindCurrentlyPlayingFrom(Config.Instance.LastFmUser);
+          var currentTrack = recentTracks.First(rt => rt.IsNowPlaying);
+          currentTrack.MusicServiceName = playingFrom.MusicServiceName;
+          currentTrack.MusicServiceUrl = playingFrom.MusicServiceUrl;
+        }
+
         cache.Insert(RecentTracksCacheKey, recentTracks);
       }
       else {
-        recentTracks = cachedTracks as List<LastfmUserRecentTrack>;
+        recentTracks = cachedTracks as List<CombinedRecentTrack>;
       }
       return recentTracks;
     }

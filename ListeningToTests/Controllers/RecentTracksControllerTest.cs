@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Http;
 using System.Web.Http.Results;
-using LastfmClient.Responses;
 using ListeningTo.Controllers;
 using ListeningTo.Models;
 using ListeningTo.Repositories;
@@ -19,7 +15,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Defaults_Number_Of_Tracks_Requested() {
       var repository = MockRepository.GenerateMock<ILastfmUserRepository>();
       var defaultCount = 25;
-      repository.Expect(r => r.FindRecentTracks(defaultCount)).Return(new List<LastfmUserRecentTrack>());
+      repository.Expect(r => r.FindRecentTracks(defaultCount)).Return(new List<CombinedRecentTrack>());
 
       new RecentTracksController(repository).GetRecentTracks();
       repository.VerifyAllExpectations();
@@ -29,10 +25,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Returns_Tracks_From_Repository() {
       var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
       var count = 2;
-      var tracks = new List<LastfmUserRecentTrack>() {
-        new LastfmUserRecentTrack(),
-        new LastfmUserRecentTrack(),
-      };
+      var tracks = new List<CombinedRecentTrack>() { new CombinedRecentTrack(), new CombinedRecentTrack(), };
       
       repository.Stub(r => r.FindRecentTracks(count)).Return(tracks);
 
@@ -44,7 +37,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Returns_NotFound_If_No_Tracks_Are_Found() {
       var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
      
-      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Return(new List<LastfmUserRecentTrack>());
+      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Return(new List<CombinedRecentTrack>());
 
      Assert.That(new RecentTracksController(repository).GetRecentTracks(), Is.InstanceOf<NotFoundResult>());
     }
@@ -54,14 +47,13 @@ namespace ListeningToTests.Controllers {
       var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
 
       var controller = new RecentTracksController(repository);
-      //throw web exception because this is what the web client will throw if the Last.fm service is down 
-      var exception = new WebException();
-      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Throw(exception);
+      var lastfmException = new WebException();
+      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Throw(lastfmException);
 
       var result = controller.GetRecentTracks();
 
       Assert.That(result, Is.InstanceOf<ExceptionResult>());
-      Assert.That((result as ExceptionResult).Exception, Is.SameAs(exception));
+      Assert.That((result as ExceptionResult).Exception, Is.SameAs(lastfmException));
     }
   }
 }
