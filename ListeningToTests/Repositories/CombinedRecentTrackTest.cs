@@ -16,10 +16,10 @@ namespace ListeningToTests.Repositories {
         Name = "Zombie Eaters",
         IsNowPlaying = true,
         LastPlayed = DateTime.Now,
-        SmallAlbumArtLocation = "small location",
-        MediumAlbumArtLocation = "Medium location",
-        LargeAlbumArtLocation = "large location",
-        ExtraLargeAlbumArtLocation = "extra large location",
+        SmallImageLocation = "small location",
+        MediumImageLocation = "Medium location",
+        LargeImageLocation = "large location",
+        ExtraLargeImageLocation = "extra large location",
       };
     }
 
@@ -32,10 +32,10 @@ namespace ListeningToTests.Repositories {
       Assert.That(combinedRecentTrack.Name, Is.EqualTo(recentTrack.Name));
       Assert.That(combinedRecentTrack.IsNowPlaying, Is.EqualTo(recentTrack.IsNowPlaying));
       Assert.That(combinedRecentTrack.LastPlayed, Is.EqualTo(recentTrack.LastPlayed));
-      Assert.That(combinedRecentTrack.SmallAlbumArtLocation, Is.EqualTo(recentTrack.SmallAlbumArtLocation));
-      Assert.That(combinedRecentTrack.MediumAlbumArtLocation, Is.EqualTo(recentTrack.MediumAlbumArtLocation));
-      Assert.That(combinedRecentTrack.LargeAlbumArtLocation, Is.EqualTo(recentTrack.LargeAlbumArtLocation));
-      Assert.That(combinedRecentTrack.ExtraLargeAlbumArtLocation, Is.EqualTo(recentTrack.ExtraLargeAlbumArtLocation));
+      Assert.That(combinedRecentTrack.SmallImageLocation, Is.EqualTo(recentTrack.SmallImageLocation));
+      Assert.That(combinedRecentTrack.MediumImageLocation, Is.EqualTo(recentTrack.MediumImageLocation));
+      Assert.That(combinedRecentTrack.LargeImageLocation, Is.EqualTo(recentTrack.LargeImageLocation));
+      Assert.That(combinedRecentTrack.ExtraLargeImageLocation, Is.EqualTo(recentTrack.ExtraLargeImageLocation));
     }
 
     [Test]

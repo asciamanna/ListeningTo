@@ -16,7 +16,7 @@ namespace ListeningTo.Models {
       foreach (var artist in lastfmTopArtists) {
         topArtists.Add(
            new TopArtist {
-             ArtistImageLocation = artist.LargeArtistImageLocation,
+             ArtistImageLocation = artist.LargeImageLocation,
              Name = artist.Name,
              Rank = artist.Rank,
              PlayCount = artist.PlayCount,

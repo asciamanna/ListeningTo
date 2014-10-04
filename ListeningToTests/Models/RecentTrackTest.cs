@@ -23,7 +23,7 @@ namespace ListeningToTests.Models {
       var expected = combinedRecentTracks.First();
 
       Assert.That(result.Album, Is.EqualTo(expected.Album));
-      Assert.That(result.AlbumArtLocation, Is.EqualTo(expected.LargeAlbumArtLocation));
+      Assert.That(result.AlbumArtLocation, Is.EqualTo(expected.LargeImageLocation));
       Assert.That(result.Name, Is.EqualTo(expected.Name));
       Assert.That(result.Artist, Is.EqualTo(expected.Artist));
       Assert.That(result.LastPlayed, Is.StringStarting("Monday, May 26, 2014"));
@@ -33,8 +33,8 @@ namespace ListeningToTests.Models {
 
     private static List<CombinedRecentTrack> CreateRepositoryRecentTracks(DateTime expectedUtcDate) {
       var combinedRecentTracks = new List<CombinedRecentTrack> {
-          new CombinedRecentTrack { Album = "Milestones", LargeAlbumArtLocation = "here", Artist = "Miles Davis", LastPlayed = expectedUtcDate, Name = "Dr. Jackle", MusicServiceUrl = "http://www.spotify.com", MusicServiceName = "Spotify" },
-          new CombinedRecentTrack { Album = "Freedom Of Choice", LargeAlbumArtLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
+          new CombinedRecentTrack { Album = "Milestones", LargeImageLocation = "here", Artist = "Miles Davis", LastPlayed = expectedUtcDate, Name = "Dr. Jackle", MusicServiceUrl = "http://www.spotify.com", MusicServiceName = "Spotify" },
+          new CombinedRecentTrack { Album = "Freedom Of Choice", LargeImageLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
         };
       return combinedRecentTracks;
     }

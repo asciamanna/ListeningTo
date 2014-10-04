@@ -23,7 +23,7 @@ namespace ListeningTo.Models {
            new RecentTrack {
              Album = track.Album,
              Artist = track.Artist,
-             AlbumArtLocation = track.LargeAlbumArtLocation,
+             AlbumArtLocation = track.LargeImageLocation,
              Name = track.Name,
              LastPlayed = PopulateLastPlayed(track),
              MusicServiceName = track.MusicServiceName,
