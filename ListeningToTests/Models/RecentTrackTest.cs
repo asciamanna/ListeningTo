@@ -42,7 +42,7 @@ namespace ListeningToTests.Models {
     [Test]
     public void FromRepositoryObjects_Converts_UTC_Time_To_Eastern_Local() {
       var utcDate = new DateTime(2014, 6, 7, 8, 55, 0, DateTimeKind.Utc);
-      var expectedLocalDate = DetermineExpectedDate();
+      var expectedLocalDate = new DateTime(2014, 6, 7, 4, 55, 0, DateTimeKind.Local);
       
       var combinedRecentTracks = new List<CombinedRecentTrack> {
         new CombinedRecentTrack { LastPlayed = utcDate }
@@ -68,13 +68,6 @@ namespace ListeningToTests.Models {
 
       var results = RecentTrack.FromRepositoryObjects(combinedRecentTracks);
       CollectionAssert.IsEmpty(results);
-    }
-
-    private static DateTime DetermineExpectedDate() {
-      var expectedLocalDateDaylightSavingsTime = new DateTime(2014, 6, 7, 4, 55, 0, DateTimeKind.Local);
-      var expectedLocalDateStandardTime = expectedLocalDateDaylightSavingsTime.AddHours(1);
-      var isDaylightSavingsTime = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time").IsDaylightSavingTime(DateTime.Now);
-      return isDaylightSavingsTime ? expectedLocalDateDaylightSavingsTime : expectedLocalDateStandardTime;
     }
   }
 }

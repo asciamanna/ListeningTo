@@ -88,11 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ArtistInfoController.cs" />
     <Compile Include="Controllers\RecentTracksController.cs" />
     <Compile Include="Controllers\TopArtistsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ArtistInfo.cs" />
     <Compile Include="Models\RecentTrack.cs" />
     <Compile Include="Models\TopArtist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,7 +102,7 @@
     <Compile Include="Repositories\Config.cs" />
     <Compile Include="Repositories\ConfigScope.cs" />
     <Compile Include="Repositories\LastfmCache.cs" />
-    <Compile Include="Repositories\LastfmUserRepository.cs" />
+    <Compile Include="Repositories\LastfmRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

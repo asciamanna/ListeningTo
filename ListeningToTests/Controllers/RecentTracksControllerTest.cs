@@ -13,7 +13,7 @@ namespace ListeningToTests.Controllers {
   public class RecentTracksControllerTest {
     [Test]
     public void GetRecentTracks_Defaults_Number_Of_Tracks_Requested() {
-      var repository = MockRepository.GenerateMock<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateMock<ILastfmRepository>();
       var defaultCount = 25;
       repository.Expect(r => r.FindRecentTracks(defaultCount)).Return(new List<CombinedRecentTrack>());
 
@@ -23,7 +23,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetRecentTracks_Returns_Tracks_From_Repository() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
       var count = 2;
       var tracks = new List<CombinedRecentTrack>() { new CombinedRecentTrack(), new CombinedRecentTrack(), };
       
@@ -35,7 +35,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetRecentTracks_Returns_NotFound_If_No_Tracks_Are_Found() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
      
       repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Return(new List<CombinedRecentTrack>());
 
@@ -44,7 +44,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetRecentTracks_Returns_Error_If_Exception_Occurs() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
 
       var controller = new RecentTracksController(repository);
       var lastfmException = new WebException();

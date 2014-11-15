@@ -14,7 +14,7 @@ namespace ListeningToTests.Controllers {
   public class TopArtistsControllerTest {
     [Test]
     public void GetTopArtists_Defaults_Number_Of_Artists_Requested() {
-      var repository = MockRepository.GenerateMock<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateMock<ILastfmRepository>();
       var defaultCount = 25;
       repository.Expect(r => r.FindTopArtists(defaultCount)).Return(new List<LastfmUserTopArtist>());
 
@@ -24,7 +24,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetTopArtists_Returns_Artists_From_Repository() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
       var count = 2;
       var artists = new List<LastfmUserTopArtist>() {
         new LastfmUserTopArtist(),
@@ -39,7 +39,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetTopArtists_Returns_NotFound_If_No_Artists_Are_Found() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
       repository.Stub(r => r.FindTopArtists(Arg<int>.Is.Anything)).Return(new List<LastfmUserTopArtist>());
 
       Assert.That(new TopArtistsController(repository).GetTopArtists(), Is.InstanceOf<NotFoundResult>());
@@ -47,7 +47,7 @@ namespace ListeningToTests.Controllers {
 
     [Test]
     public void GetTopArtists_Returns_Error_If_Exception_Occurs() {
-      var repository = MockRepository.GenerateStub<ILastfmUserRepository>();
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
 
       var controller = new TopArtistsController(repository);
       var exceptionWhenLastfmIsDown = new WebException();

@@ -8,7 +8,7 @@ using Rhino.Mocks;
 
 namespace ListeningToTests {
   [TestFixture]
-  public class LastfmUserRepositoryTest {
+  public class LastfmRepositoryTest {
     [Test]
     public void FindRecentTracks_Adds_Results_To_Cache_And_Returns_Them() {
       var service = MockRepository.GenerateStub<ILastfmService>();
@@ -23,14 +23,14 @@ namespace ListeningToTests {
       var lastfmTracks = GenerateLastFmTracks(2);
 
       service.Stub(s => s.FindRecentTracks(lastfmUser, expectedCount)).Return(lastfmTracks);
-      cache.Stub(c => c.Get(LastfmUserRepository.RecentTracksCacheKey)).Return(null);
-      cache.Expect(c => c.Insert(Arg<string>.Is.Equal(LastfmUserRepository.RecentTracksCacheKey), 
+      cache.Stub(c => c.Get(LastfmRepository.RecentTracksCacheKey)).Return(null);
+      cache.Expect(c => c.Insert(Arg<string>.Is.Equal(LastfmRepository.RecentTracksCacheKey), 
                                  Arg<List<CombinedRecentTrack>>.List.Count(Rhino.Mocks.Constraints.Is.Equal(2))));
       config.Stub(c => c.LastFmUser).Return(lastfmUser);
       config.Stub(c => c.LastFmApiKey).Return("key");
 
       using (new ConfigScope(config)) {
-        var repository = new LastfmUserRepository(service, cache);
+        var repository = new LastfmRepository(service, cache);
         var recentTracks = repository.FindRecentTracks(expectedCount);
 
         cache.VerifyAllExpectations();
@@ -49,8 +49,8 @@ namespace ListeningToTests {
       var expectedTracks = new List<CombinedRecentTrack> {
         new CombinedRecentTrack(), 
       };
-      var repository = new LastfmUserRepository(null, cache);
-      cache.Stub(c => c.Get(LastfmUserRepository.RecentTracksCacheKey)).Return(expectedTracks);
+      var repository = new LastfmRepository(null, cache);
+      cache.Stub(c => c.Get(LastfmRepository.RecentTracksCacheKey)).Return(expectedTracks);
 
       var recentTracks = repository.FindRecentTracks(1);
 
@@ -73,7 +73,7 @@ namespace ListeningToTests {
       service.Stub(s => s.FindCurrentlyPlayingFrom(lastfmUser)).Return(playingFrom);
       
       using (new ConfigScope(config)) {
-        var repository = new LastfmUserRepository(service, cache);
+        var repository = new LastfmRepository(service, cache);
         var recentTrack = repository.FindRecentTracks(1).First();
 
         Assert.That(recentTrack.MusicServiceName, Is.EqualTo(playingFrom.MusicServiceName));
@@ -95,13 +95,13 @@ namespace ListeningToTests {
       };
 
       service.Stub(s => s.FindTopArtists(lastfmUser, expectedCount)).Return(expectedTopArtists);
-      cache.Stub(c => c.Get(LastfmUserRepository.TopArtistsCacheKey)).Return(null);
-      cache.Expect(c => c.Insert(LastfmUserRepository.TopArtistsCacheKey, expectedTopArtists));
+      cache.Stub(c => c.Get(LastfmRepository.TopArtistsCacheKey)).Return(null);
+      cache.Expect(c => c.Insert(LastfmRepository.TopArtistsCacheKey, expectedTopArtists));
       config.Stub(c => c.LastFmUser).Return(lastfmUser);
       config.Stub(c => c.LastFmApiKey).Return("key");
 
       using (new ConfigScope(config)) {
-        var repository = new LastfmUserRepository(service, cache);
+        var repository = new LastfmRepository(service, cache);
         var topArtists = repository.FindTopArtists(expectedCount);
 
         cache.VerifyAllExpectations();
@@ -116,12 +116,48 @@ namespace ListeningToTests {
       var expectedArtists = new List<LastfmUserTopArtist> {
         new LastfmUserTopArtist(), 
       };
-      var repository = new LastfmUserRepository(null, cache);
-      cache.Stub(c => c.Get(LastfmUserRepository.TopArtistsCacheKey)).Return(expectedArtists);
+      var repository = new LastfmRepository(null, cache);
+      cache.Stub(c => c.Get(LastfmRepository.TopArtistsCacheKey)).Return(expectedArtists);
 
       var topArtists = repository.FindTopArtists(1);
 
       CollectionAssert.AreEqual(expectedArtists, topArtists);
+    }
+
+    [Test]
+    public void FindArtistInfo_Adds_Result_To_Cache_And_Returns_It() {
+      var service = MockRepository.GenerateStub<ILastfmService>();
+      var cache = MockRepository.GenerateMock<ILastfmCache>();
+      var config = MockRepository.GenerateStub<IConfig>();
+
+      var expectedArtistInfo = new LastfmArtistInfo();
+      var artist = "Bobby Hutcherson";
+
+      service.Stub(s => s.FindArtistInfo(artist)).Return(expectedArtistInfo);
+      cache.Stub(c => c.Get(LastfmRepository.ArtistInfoCacheKey + ":" + artist)).Return(null);
+      cache.Expect(c => c.Insert(LastfmRepository.ArtistInfoCacheKey + ":" + artist, expectedArtistInfo));
+
+      using (new ConfigScope(config)) {
+        var repository = new LastfmRepository(service, cache);
+        var artistInfo = repository.FindArtistInfo(artist);
+
+        cache.VerifyAllExpectations();
+        Assert.That(artistInfo, Is.SameAs(expectedArtistInfo));
+      }
+    }
+
+    [Test]
+    public void FindArtistInfo_Gets_Data_From_Cache() {
+      var cache = MockRepository.GenerateStub<ILastfmCache>();
+      var expectedArtistInfo = new LastfmArtistInfo();
+      var artist = "Bobby Hutcherson";
+
+      var repository = new LastfmRepository(null, cache);
+      cache.Stub(c => c.Get(LastfmRepository.ArtistInfoCacheKey + ":" + artist)).Return(expectedArtistInfo);
+
+      var artistInfo = repository.FindArtistInfo("Bobby Hutcherson");
+
+      Assert.That(artistInfo, Is.SameAs(expectedArtistInfo));
     }
   }
 }

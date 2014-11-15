@@ -6,11 +6,11 @@ using ListeningTo.Repositories;
 
 namespace ListeningTo.Controllers {
   public class TopArtistsController : ApiController {
-    ILastfmUserRepository repository;
+    ILastfmRepository repository;
 
-    public TopArtistsController() : this(new LastfmUserRepository()) { }
+    public TopArtistsController() : this(new LastfmRepository()) { }
 
-    public TopArtistsController(ILastfmUserRepository repository) {
+    public TopArtistsController(ILastfmRepository repository) {
       this.repository = repository;
     }
 

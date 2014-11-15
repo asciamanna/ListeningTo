@@ -83,9 +83,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\RecentTracksControllerTest.cs" />
+    <Compile Include="Controllers\ArtistInfoControllerTest.cs" />
     <Compile Include="Controllers\TopArtistsControllerTest.cs" />
+    <Compile Include="Models\ArtistInfoTest.cs" />
     <Compile Include="Repositories\CombinedRecentTrackTest.cs" />
-    <Compile Include="Repositories\LastfmUserRepositoryTest.cs" />
+    <Compile Include="Repositories\LastfmRepositoryTest.cs" />
     <Compile Include="Models\RecentTrackTest.cs" />
     <Compile Include="Models\TopArtistTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

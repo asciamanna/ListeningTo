@@ -4,20 +4,22 @@ using LastfmClient;
 using LastfmClient.Responses;
 
 namespace ListeningTo.Repositories {
-  public interface ILastfmUserRepository {
+  public interface ILastfmRepository {
     IEnumerable<CombinedRecentTrack> FindRecentTracks(int count);
     IEnumerable<LastfmUserTopArtist> FindTopArtists(int count);
+    LastfmArtistInfo FindArtistInfo(string artist);
   }
 
-  public class LastfmUserRepository : ILastfmUserRepository {
+  public class LastfmRepository : ILastfmRepository {
     readonly ILastfmService service;
     readonly ILastfmCache cache;
-    public static string RecentTracksCacheKey = "lastfmuser-recenttracks";
-    public static string TopArtistsCacheKey = "lastfmuser-topartists";
+    public const string RecentTracksCacheKey = "lastfmuser-recenttracks";
+    public const string TopArtistsCacheKey = "lastfmuser-topartists";
+    public const string ArtistInfoCacheKey = "lastfmartist-artistinfo";
 
-    public LastfmUserRepository() : this(new LastfmService(Config.Instance.LastFmApiKey), new LastfmCache()) { }
+    public LastfmRepository() : this(new LastfmService(Config.Instance.LastFmApiKey), new LastfmCache()) { }
 
-    public LastfmUserRepository(ILastfmService service, ILastfmCache cache) {
+    public LastfmRepository(ILastfmService service, ILastfmCache cache) {
       this.service = service;
       this.cache = cache;
     }
@@ -60,6 +62,20 @@ namespace ListeningTo.Repositories {
         topArtists = cachedArtists as List<LastfmUserTopArtist>;
       }
       return topArtists;
+    }
+
+    public LastfmArtistInfo FindArtistInfo(string artist) {
+      var artistInfo = cache.Get(BuildInfoCacheKey(ArtistInfoCacheKey, artist)) as LastfmArtistInfo;
+
+      if (artistInfo == null) {
+        artistInfo = service.FindArtistInfo(artist);
+        cache.Insert(BuildInfoCacheKey(ArtistInfoCacheKey, artist), artistInfo);
+      }
+      return artistInfo;
+    }
+
+    private string BuildInfoCacheKey(string key, string value) {
+      return string.Format("{0}:{1}", key, value);
     }
   }
 }

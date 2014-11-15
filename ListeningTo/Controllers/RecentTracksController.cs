@@ -6,11 +6,11 @@ using ListeningTo.Repositories;
 
 namespace ListeningTo.Controllers {
   public class RecentTracksController : ApiController {
-    readonly ILastfmUserRepository repository;
+    readonly ILastfmRepository repository;
 
-    public RecentTracksController() : this(new LastfmUserRepository()) { }
+    public RecentTracksController() : this(new LastfmRepository()) { }
 
-    public RecentTracksController(ILastfmUserRepository repository) {
+    public RecentTracksController(ILastfmRepository repository) {
       this.repository = repository;
     }
 
