@@ -4,8 +4,9 @@ ListeningTo is a .NET Web API app that provides RESTful access to Last.fm user i
 - Recently Played Tracks
 - Top Artists 
 
-It provides two benefits over using the last.fm REST API directly
+It also provides access to Artist Info and Album Info summary data.
 
+It provides two benefits over using the last.fm REST API directly
 
 - It hides the Last.fm API key in a configuration file server side so it is not visible in the browser
 
@@ -22,8 +23,8 @@ The Recent Tracks service returns a date string for the last played date. This c
 * Specify the timezone used to convert the UTC last played date into a local date string in the app config. 
 
 ##Dependencies
--	Rhino Mocks
--	NUnit
+-	Rhino Mocks 3.6.1
+-	NUnit 2.6.3
 -	[LastfmClient](http://www.github.com/asciamanna/LastfmClient "LastfmClient") (my last.fm REST client also on github)
 
 ## Contact
