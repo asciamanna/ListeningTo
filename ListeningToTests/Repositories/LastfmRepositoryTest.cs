@@ -155,9 +155,48 @@ namespace ListeningToTests {
       var repository = new LastfmRepository(null, cache);
       cache.Stub(c => c.Get(LastfmRepository.ArtistInfoCacheKey + ":" + artist)).Return(expectedArtistInfo);
 
-      var artistInfo = repository.FindArtistInfo("Bobby Hutcherson");
+      var artistInfo = repository.FindArtistInfo(artist);
 
       Assert.That(artistInfo, Is.SameAs(expectedArtistInfo));
+    }
+
+
+    [Test]
+    public void FindAlbumInfo_Adds_Result_To_Cache_And_Returns_It() {
+      var service = MockRepository.GenerateStub<ILastfmService>();
+      var cache = MockRepository.GenerateMock<ILastfmCache>();
+      var config = MockRepository.GenerateStub<IConfig>();
+
+      var expectedAlbumInfo = new LastfmAlbumInfo();
+      var artist = "Bobby Hutcherson";
+      var album = "Spiral";
+
+      service.Stub(s => s.FindAlbumInfo(artist, album)).Return(expectedAlbumInfo);
+      cache.Stub(c => c.Get(LastfmRepository.AlbumInfoCacheKey + ":" + artist + album)).Return(null);
+      cache.Expect(c => c.Insert(LastfmRepository.AlbumInfoCacheKey + ":" + artist + album, expectedAlbumInfo));
+
+      using (new ConfigScope(config)) {
+        var repository = new LastfmRepository(service, cache);
+        var albumInfo = repository.FindAlbumInfo(artist, album);
+
+        cache.VerifyAllExpectations();
+        Assert.That(albumInfo, Is.SameAs(expectedAlbumInfo));
+      }
+    }
+
+    [Test]
+    public void FindAlbumInfo_Gets_Data_From_Cache() {
+      var cache = MockRepository.GenerateStub<ILastfmCache>();
+      var expectedAlbumInfo = new LastfmAlbumInfo();
+      var artist = "Bobby Hutcherson";
+      var album = "Spiral";
+
+      var repository = new LastfmRepository(null, cache);
+      cache.Stub(c => c.Get(LastfmRepository.AlbumInfoCacheKey + ":" + artist + album)).Return(expectedAlbumInfo);
+
+      var albumInfo = repository.FindAlbumInfo(artist, album);
+
+      Assert.That(albumInfo, Is.SameAs(expectedAlbumInfo));
     }
   }
 }

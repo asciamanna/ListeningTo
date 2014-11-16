@@ -8,6 +8,7 @@ namespace ListeningTo.Repositories {
     IEnumerable<CombinedRecentTrack> FindRecentTracks(int count);
     IEnumerable<LastfmUserTopArtist> FindTopArtists(int count);
     LastfmArtistInfo FindArtistInfo(string artist);
+    LastfmAlbumInfo FindAlbumInfo(string artist, string album);
   }
 
   public class LastfmRepository : ILastfmRepository {
@@ -16,6 +17,7 @@ namespace ListeningTo.Repositories {
     public const string RecentTracksCacheKey = "lastfmuser-recenttracks";
     public const string TopArtistsCacheKey = "lastfmuser-topartists";
     public const string ArtistInfoCacheKey = "lastfmartist-artistinfo";
+    public const string AlbumInfoCacheKey = "lastfmalbum-albuminfo";
 
     public LastfmRepository() : this(new LastfmService(Config.Instance.LastFmApiKey), new LastfmCache()) { }
 
@@ -65,16 +67,26 @@ namespace ListeningTo.Repositories {
     }
 
     public LastfmArtistInfo FindArtistInfo(string artist) {
-      var artistInfo = cache.Get(BuildInfoCacheKey(ArtistInfoCacheKey, artist)) as LastfmArtistInfo;
+      var artistInfo = cache.Get(BuildInfoCache(ArtistInfoCacheKey, artist)) as LastfmArtistInfo;
 
       if (artistInfo == null) {
         artistInfo = service.FindArtistInfo(artist);
-        cache.Insert(BuildInfoCacheKey(ArtistInfoCacheKey, artist), artistInfo);
+        cache.Insert(BuildInfoCache(ArtistInfoCacheKey, artist), artistInfo);
       }
       return artistInfo;
     }
 
-    private string BuildInfoCacheKey(string key, string value) {
+    public LastfmAlbumInfo FindAlbumInfo(string artist, string album) {
+      var albumInfo = cache.Get(BuildInfoCache(AlbumInfoCacheKey, artist + album)) as LastfmAlbumInfo;
+
+      if (albumInfo == null) {
+        albumInfo = service.FindAlbumInfo(artist, album);
+        cache.Insert(BuildInfoCache(AlbumInfoCacheKey, artist + album), albumInfo);
+      }
+      return albumInfo;
+    }
+
+    private string BuildInfoCache(string key, string value) {
       return string.Format("{0}:{1}", key, value);
     }
   }

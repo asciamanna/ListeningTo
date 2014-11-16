@@ -88,12 +88,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AlbumInfoController.cs" />
     <Compile Include="Controllers\ArtistInfoController.cs" />
     <Compile Include="Controllers\RecentTracksController.cs" />
     <Compile Include="Controllers\TopArtistsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AlbumInfo.cs" />
     <Compile Include="Models\ArtistInfo.cs" />
     <Compile Include="Models\RecentTrack.cs" />
     <Compile Include="Models\TopArtist.cs" />
