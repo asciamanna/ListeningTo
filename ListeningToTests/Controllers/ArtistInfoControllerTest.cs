@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http.Results;
+using LastfmClient;
 using LastfmClient.Responses;
 using ListeningTo.Controllers;
 using ListeningTo.Models;
@@ -46,6 +47,32 @@ namespace ListeningToTests.Controllers {
 
       Assert.That(result, Is.InstanceOf<ExceptionResult>());
       Assert.That((result as ExceptionResult).Exception, Is.SameAs(exceptionWhenLastfmIsDown));
+    }
+
+    [Test]
+    public void GetArtistInfo_Returns_NotFound_If_LastfmException_ArtistNotFound() {
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
+
+      var controller = new ArtistInfoController(repository);
+      var lastfmException = new LastfmException("The artist you supplied could not be found") { ErrorCode = 6 };
+
+      repository.Stub(r => r.FindArtistInfo(Arg<string>.Is.Anything)).Throw(lastfmException);
+
+      var result = controller.GetArtistInfo("Fake Band");
+      Assert.That(result, Is.InstanceOf<NotFoundResult>());
+    }
+
+    [Test]
+    public void GetArtistInfo_Returns_InternalServerError_If_LastfmException_And_Not_ArtistNotFound() {
+      var repository = MockRepository.GenerateStub<ILastfmRepository>();
+
+      var controller = new ArtistInfoController(repository);
+      var lastfmException = new LastfmException("Invalid API key") { ErrorCode = 10 };
+
+      repository.Stub(r => r.FindArtistInfo(Arg<string>.Is.Anything)).Throw(lastfmException);
+
+      var result = controller.GetArtistInfo(CreateArtistName());
+      Assert.That(result, Is.InstanceOf<ExceptionResult>());
     }
 
     private static string CreateArtistName() {

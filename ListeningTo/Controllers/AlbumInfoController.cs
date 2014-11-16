@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Http;
+using LastfmClient;
 using ListeningTo.Models;
 using ListeningTo.Repositories;
 
@@ -20,6 +21,12 @@ namespace ListeningTo.Controllers {
           return Ok(albumInfo);
         }
         return NotFound();
+      }
+      catch (LastfmException e) {
+        if (e.ErrorCode == 6 && e.Message == "Album not found") {
+          return NotFound();
+        }
+        return InternalServerError(e);
       }
       catch (Exception e) {
         return InternalServerError(e);
