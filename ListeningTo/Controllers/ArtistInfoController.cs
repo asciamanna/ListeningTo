@@ -16,21 +16,30 @@ namespace ListeningTo.Controllers {
 
     public IHttpActionResult GetArtistInfo([FromUri] string artist) {
       try {
-        var artistInfo = ArtistInfo.FromRepositoryObject(repository.FindArtistInfo(artist));
-        if (!string.IsNullOrWhiteSpace(artistInfo.Name)) {
-          return Ok(artistInfo);
-        }
-        return NotFound();
+        return RetrieveArtistInfo(artist);
       }
       catch (LastfmException e) {
-        if (e.ErrorCode == 6 && e.Message == "The artist you supplied could not be found") {
-          return NotFound();
-        }
-        return InternalServerError(e);
+        return HandleLastfmException(e);
       }
       catch (Exception e) {
         return InternalServerError(e);
       }
     }
+
+    private IHttpActionResult RetrieveArtistInfo(string artist) {
+      var artistInfo = ArtistInfo.FromRepositoryObject(repository.FindArtistInfo(artist));
+      if (!string.IsNullOrWhiteSpace(artistInfo.Name)) {
+        return Ok(artistInfo);
+      }
+      return NotFound();
+    }
+
+    private IHttpActionResult HandleLastfmException(LastfmException e) {
+      if (e.ErrorCode == 6 && e.Message == "The artist you supplied could not be found") {
+        return NotFound();
+      }
+      return InternalServerError(e);
+    }
+
   }
 }
