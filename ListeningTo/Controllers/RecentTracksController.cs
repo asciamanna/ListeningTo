@@ -16,15 +16,19 @@ namespace ListeningTo.Controllers {
 
     public IHttpActionResult GetRecentTracks([FromUri] int count = 25) {
       try {
-        var recentTracks = RecentTrack.FromRepositoryObjects(repository.FindRecentTracks(count));
-        if (recentTracks.Any()) {
-          return Ok(recentTracks);
-        }
-        return NotFound();
+        return RetrieveRecentTracks(count);
       }
       catch (Exception e) {
         return InternalServerError(e);
       }
+    }
+
+    private IHttpActionResult RetrieveRecentTracks(int count) {
+      var recentTracks = RecentTrack.FromRepositoryObjects(repository.FindRecentTracks(count));
+      if (recentTracks.Any()) {
+        return Ok(recentTracks);
+      }
+      return NotFound();
     }
   }
 }
