@@ -7,7 +7,7 @@ using ListeningTo.Repositories;
 
 namespace ListeningTo.Models {
   public class RecentTrack {
-    
+
     public string Name { get; set; }
     public string Artist { get; set; }
     public string Album { get; set; }
@@ -17,21 +17,19 @@ namespace ListeningTo.Models {
     public string MusicServiceUrl { get; set; }
 
     public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<CombinedRecentTrack> combinedRecentTracks) {
-      var recentTracks = new List<RecentTrack>();
-      foreach (var track in combinedRecentTracks) {
-        recentTracks.Add(
-           new RecentTrack {
-             Album = track.Album,
-             Artist = track.Artist,
-             AlbumArtLocation = track.LargeImageLocation,
-             Name = track.Name,
-             LastPlayed = PopulateLastPlayed(track),
-             MusicServiceName = track.MusicServiceName,
-             MusicServiceUrl = track.MusicServiceUrl,
-           }
-        );
-      }
-      return recentTracks;
+      return combinedRecentTracks.Select(CreateTrack);
+    }
+
+    private static RecentTrack CreateTrack(CombinedRecentTrack track) {
+      return new RecentTrack {
+        Album = track.Album,
+        Artist = track.Artist,
+        AlbumArtLocation = track.LargeImageLocation,
+        Name = track.Name,
+        LastPlayed = PopulateLastPlayed(track),
+        MusicServiceName = track.MusicServiceName,
+        MusicServiceUrl = track.MusicServiceUrl,
+      };
     }
 
     private static string PopulateLastPlayed(LastfmUserRecentTrack track) {
