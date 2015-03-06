@@ -12,10 +12,7 @@ namespace ListeningTo.Repositories {
     private Config() { }
     public static IConfig Instance {
       get {
-        if (config == null) {
-          config = new Config();
-        }
-        return config;
+        return config ?? new Config();
       }
       set { config = value; }
     }
@@ -29,7 +26,6 @@ namespace ListeningTo.Repositories {
         return lastFmApiKey;
       }
     }
-
 
     public string LastFmUser {
       get {

@@ -32,7 +32,7 @@ namespace ListeningTo.Repositories {
 
       if (cachedTracks == null) {
         var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
-        recentTracks = lastfmRecentTracks.Select(rt => CombinedRecentTrack.FromLastFmObject(rt)).ToList();
+        recentTracks = lastfmRecentTracks.Select(CombinedRecentTrack.FromLastFmObject).ToList();
 
         if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
           ApplyPlayingFromInformation(recentTracks);
