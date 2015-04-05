@@ -1,3 +1,0 @@
-1. Split LastfmRepository into smaller separate repository objects.
-2. Research cache options
-3. Once last.fm client is async must chain async/await to api controllers.

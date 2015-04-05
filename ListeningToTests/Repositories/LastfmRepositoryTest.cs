@@ -16,8 +16,8 @@ namespace ListeningToTests {
       var config = MockRepository.GenerateMock<IConfig>();
       var expectedCount = 2;
      
-      var expectedTracks = new List<CombinedRecentTrack> {
-        new CombinedRecentTrack(), new CombinedRecentTrack()
+      var expectedTracks = new List<RecentTrackWithSource> {
+        new RecentTrackWithSource(), new RecentTrackWithSource()
       };
       var lastfmUser = "me";
       var lastfmTracks = GenerateLastFmTracks(2);
@@ -25,7 +25,7 @@ namespace ListeningToTests {
       service.Stub(s => s.FindRecentTracks(lastfmUser, expectedCount)).Return(lastfmTracks);
       cache.Stub(c => c.Get(LastfmRepository.RecentTracksCacheKey)).Return(null);
       cache.Expect(c => c.Insert(Arg<string>.Is.Equal(LastfmRepository.RecentTracksCacheKey), 
-                                 Arg<List<CombinedRecentTrack>>.List.Count(Rhino.Mocks.Constraints.Is.Equal(2))));
+                                 Arg<List<RecentTrackWithSource>>.List.Count(Rhino.Mocks.Constraints.Is.Equal(2))));
       config.Stub(c => c.LastFmUser).Return(lastfmUser);
       config.Stub(c => c.LastFmApiKey).Return("key");
 
@@ -35,7 +35,7 @@ namespace ListeningToTests {
 
         cache.VerifyAllExpectations();
         Assert.That(recentTracks.Count(), Is.EqualTo(expectedCount));
-        Assert.That(recentTracks.First(), Is.TypeOf<CombinedRecentTrack>());
+        Assert.That(recentTracks.First(), Is.TypeOf<RecentTrackWithSource>());
       }
     }
 
@@ -46,8 +46,8 @@ namespace ListeningToTests {
     [Test]
     public void FindRecentTracks_Gets_Data_From_Cache() {
       var cache = MockRepository.GenerateStub<ILastfmCache>();
-      var expectedTracks = new List<CombinedRecentTrack> {
-        new CombinedRecentTrack(), 
+      var expectedTracks = new List<RecentTrackWithSource> {
+        new RecentTrackWithSource(), 
       };
       var repository = new LastfmRepository(null, cache);
       cache.Stub(c => c.Get(LastfmRepository.RecentTracksCacheKey)).Return(expectedTracks);
@@ -66,18 +66,18 @@ namespace ListeningToTests {
         new LastfmUserRecentTrack { IsNowPlaying = true },
       };
       var lastfmUser = "me";
-      var playingFrom = new LastfmPlayingFrom { MusicServiceName = "Spotify", MusicServiceUrl = "http://www.spotify.com"};
+      var musicSource = new LastfmMusicSource { MusicServiceName = "Spotify", MusicServiceUrl = "http://www.spotify.com"};
 
       config.Stub(c => c.LastFmUser).Return(lastfmUser);
       service.Stub(s => s.FindRecentTracks(lastfmUser, 1)).Return(expectedTracks);
-      service.Stub(s => s.FindCurrentlyPlayingFrom(lastfmUser)).Return(playingFrom);
+      service.Stub(s => s.FindMusicSource(lastfmUser)).Return(musicSource);
       
       using (new ConfigScope(config)) {
         var repository = new LastfmRepository(service, cache);
         var recentTrack = repository.FindRecentTracks(1).First();
 
-        Assert.That(recentTrack.MusicServiceName, Is.EqualTo(playingFrom.MusicServiceName));
-        Assert.That(recentTrack.MusicServiceUrl, Is.EqualTo(playingFrom.MusicServiceUrl));
+        Assert.That(recentTrack.MusicServiceName, Is.EqualTo(musicSource.MusicServiceName));
+        Assert.That(recentTrack.MusicServiceUrl, Is.EqualTo(musicSource.MusicServiceUrl));
       }
     }
 

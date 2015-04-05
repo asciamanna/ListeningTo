@@ -31,10 +31,10 @@ namespace ListeningToTests.Models {
       Assert.That(result.MusicServiceUrl, Is.EqualTo(expected.MusicServiceUrl));
     }
 
-    private static List<CombinedRecentTrack> CreateRepositoryRecentTracks(DateTime expectedUtcDate) {
-      var combinedRecentTracks = new List<CombinedRecentTrack> {
-          new CombinedRecentTrack { Album = "Milestones", LargeImageLocation = "here", Artist = "Miles Davis", LastPlayed = expectedUtcDate, Name = "Dr. Jackle", MusicServiceUrl = "http://www.spotify.com", MusicServiceName = "Spotify" },
-          new CombinedRecentTrack { Album = "Freedom Of Choice", LargeImageLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
+    private static List<RecentTrackWithSource> CreateRepositoryRecentTracks(DateTime expectedUtcDate) {
+      var combinedRecentTracks = new List<RecentTrackWithSource> {
+          new RecentTrackWithSource { Album = "Milestones", LargeImageLocation = "here", Artist = "Miles Davis", LastPlayed = expectedUtcDate, Name = "Dr. Jackle", MusicServiceUrl = "http://www.spotify.com", MusicServiceName = "Spotify" },
+          new RecentTrackWithSource { Album = "Freedom Of Choice", LargeImageLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
         };
       return combinedRecentTracks;
     }
@@ -44,8 +44,8 @@ namespace ListeningToTests.Models {
       var utcDate = new DateTime(2014, 6, 7, 8, 55, 0, DateTimeKind.Utc);
       var expectedLocalDate = new DateTime(2014, 6, 7, 4, 55, 0, DateTimeKind.Local);
       
-      var combinedRecentTracks = new List<CombinedRecentTrack> {
-        new CombinedRecentTrack { LastPlayed = utcDate }
+      var combinedRecentTracks = new List<RecentTrackWithSource> {
+        new RecentTrackWithSource { LastPlayed = utcDate }
       };
       var convertedDate = RecentTrack.FromRepositoryObjects(combinedRecentTracks).First().LastPlayed;
 
@@ -54,8 +54,8 @@ namespace ListeningToTests.Models {
 
     [Test]
     public void FromRepositoryObjects_Shows_Now_Playing_As_Last_Played_String() {
-      var combinedRecentTracks = new List<CombinedRecentTrack> {
-        new CombinedRecentTrack { IsNowPlaying = true }
+      var combinedRecentTracks = new List<RecentTrackWithSource> {
+        new RecentTrackWithSource { IsNowPlaying = true }
       };
       var track = RecentTrack.FromRepositoryObjects(combinedRecentTracks).First();
 
@@ -64,7 +64,7 @@ namespace ListeningToTests.Models {
 
     [Test]
     public void FromRepositoryObjects_When_There_Are_No_RecentTracks_Returns_Empty_List() {
-      var combinedRecentTracks = new List<CombinedRecentTrack>();
+      var combinedRecentTracks = new List<RecentTrackWithSource>();
 
       var results = RecentTrack.FromRepositoryObjects(combinedRecentTracks);
       CollectionAssert.IsEmpty(results);

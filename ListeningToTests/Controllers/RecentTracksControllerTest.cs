@@ -15,7 +15,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Defaults_Number_Of_Tracks_Requested() {
       var repository = MockRepository.GenerateMock<ILastfmRepository>();
       var defaultCount = 25;
-      repository.Expect(r => r.FindRecentTracks(defaultCount)).Return(new List<CombinedRecentTrack>());
+      repository.Expect(r => r.FindRecentTracks(defaultCount)).Return(new List<RecentTrackWithSource>());
 
       new RecentTracksController(repository).GetRecentTracks();
       repository.VerifyAllExpectations();
@@ -25,7 +25,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Returns_Tracks_From_Repository() {
       var repository = MockRepository.GenerateStub<ILastfmRepository>();
       var count = 2;
-      var tracks = new List<CombinedRecentTrack>() { new CombinedRecentTrack(), new CombinedRecentTrack(), };
+      var tracks = new List<RecentTrackWithSource>() { new RecentTrackWithSource(), new RecentTrackWithSource(), };
       
       repository.Stub(r => r.FindRecentTracks(count)).Return(tracks);
 
@@ -37,7 +37,7 @@ namespace ListeningToTests.Controllers {
     public void GetRecentTracks_Returns_NotFound_If_No_Tracks_Are_Found() {
       var repository = MockRepository.GenerateStub<ILastfmRepository>();
      
-      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Return(new List<CombinedRecentTrack>());
+      repository.Stub(r => r.FindRecentTracks(Arg<int>.Is.Anything)).Return(new List<RecentTrackWithSource>());
 
      Assert.That(new RecentTracksController(repository).GetRecentTracks(), Is.InstanceOf<NotFoundResult>());
     }

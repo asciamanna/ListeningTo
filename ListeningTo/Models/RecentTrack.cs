@@ -7,6 +7,7 @@ using ListeningTo.Repositories;
 
 namespace ListeningTo.Models {
   public class RecentTrack {
+    private const string nowPlaying = "Now Playing";
 
     public string Name { get; set; }
     public string Artist { get; set; }
@@ -16,11 +17,11 @@ namespace ListeningTo.Models {
     public string MusicServiceName { get; set; }
     public string MusicServiceUrl { get; set; }
 
-    public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<CombinedRecentTrack> combinedRecentTracks) {
+    public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<RecentTrackWithSource> combinedRecentTracks) {
       return combinedRecentTracks.Select(CreateTrack);
     }
 
-    private static RecentTrack CreateTrack(CombinedRecentTrack track) {
+    private static RecentTrack CreateTrack(RecentTrackWithSource track) {
       return new RecentTrack {
         Album = track.Album,
         Artist = track.Artist,
@@ -33,18 +34,21 @@ namespace ListeningTo.Models {
     }
 
     private static string PopulateLastPlayed(LastfmUserRecentTrack track) {
-      return track.IsNowPlaying ? "Now Playing" : ConvertToLocalString(track.LastPlayed);
+      return track.IsNowPlaying ? nowPlaying : ConvertToLocalString(track.LastPlayed);
     }
     static string ConvertToLocalString(DateTime? date) {
       if (!date.HasValue) {
         return String.Empty;
       }
       if (date.Value.Kind == DateTimeKind.Utc) {
-        var easternZone = GetEasternTimeZone();
-        var utcTime = DateTime.SpecifyKind(date.Value, DateTimeKind.Utc);
-        return TimeZoneInfo.ConvertTimeFromUtc(utcTime, easternZone).ToString("f");
+        return ConvertToEasternTime(date);
       }
       return date.Value.ToString("f");
+    }
+
+    private static string ConvertToEasternTime(DateTime? date) {
+      var utcTime = DateTime.SpecifyKind(date.Value, DateTimeKind.Utc);
+      return TimeZoneInfo.ConvertTimeFromUtc(utcTime, GetEasternTimeZone()).ToString("f");
     }
 
     static TimeZoneInfo easternTimeZone = null;

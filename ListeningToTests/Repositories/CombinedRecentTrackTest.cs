@@ -25,7 +25,7 @@ namespace ListeningToTests.Repositories {
 
     [Test]
     public void FromLastFmObject_Copies_LastfmUserRecentTrack() {
-      var combinedRecentTrack = CombinedRecentTrack.FromLastFmObject(recentTrack);
+      var combinedRecentTrack = RecentTrackWithSource.FromLastFmObject(recentTrack);
 
       Assert.That(combinedRecentTrack.Artist, Is.EqualTo(recentTrack.Artist));
       Assert.That(combinedRecentTrack.Album, Is.EqualTo(recentTrack.Album));
@@ -40,7 +40,7 @@ namespace ListeningToTests.Repositories {
 
     [Test]
     public void FromLastFmObject_Returns_Empty_String_For_PlayingFrom_Fields() {
-      var combinedRecentTrack = CombinedRecentTrack.FromLastFmObject(recentTrack);
+      var combinedRecentTrack = RecentTrackWithSource.FromLastFmObject(recentTrack);
 
       Assert.That(combinedRecentTrack.MusicServiceName, Is.Empty);
       Assert.That(combinedRecentTrack.MusicServiceUrl, Is.Empty);

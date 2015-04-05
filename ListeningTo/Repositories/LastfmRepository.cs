@@ -5,7 +5,7 @@ using LastfmClient.Responses;
 
 namespace ListeningTo.Repositories {
   public interface ILastfmRepository {
-    IEnumerable<CombinedRecentTrack> FindRecentTracks(int count);
+    IEnumerable<RecentTrackWithSource> FindRecentTracks(int count);
     IEnumerable<LastfmUserTopArtist> FindTopArtists(int count);
     LastfmArtistInfo FindArtistInfo(string artist);
     LastfmAlbumInfo FindAlbumInfo(string artist, string album);
@@ -26,27 +26,31 @@ namespace ListeningTo.Repositories {
       this.cache = cache;
     }
 
-    public IEnumerable<CombinedRecentTrack> FindRecentTracks(int count) {
-      var recentTracks = new List<CombinedRecentTrack>();
+    public IEnumerable<RecentTrackWithSource> FindRecentTracks(int count) {
+      var recentTracks = new List<RecentTrackWithSource>();
       var cachedTracks = cache.Get(RecentTracksCacheKey);
 
       if (cachedTracks == null) {
-        var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
-        recentTracks = lastfmRecentTracks.Select(CombinedRecentTrack.FromLastFmObject).ToList();
-
-        if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
-          ApplyPlayingFromInformation(recentTracks);
-        }
+        recentTracks = RetrieveRecentTracksWithSource(count, recentTracks);
         cache.Insert(RecentTracksCacheKey, recentTracks);
       }
       else {
-        recentTracks = cachedTracks as List<CombinedRecentTrack>;
+        recentTracks = cachedTracks as List<RecentTrackWithSource>;
       }
       return recentTracks;
     }
 
-    private void ApplyPlayingFromInformation(List<CombinedRecentTrack> recentTracks) {
-      var playingFrom = service.FindCurrentlyPlayingFrom(Config.Instance.LastFmUser);
+    private List<RecentTrackWithSource> RetrieveRecentTracksWithSource(int count, List<RecentTrackWithSource> recentTracks) {
+      var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
+      recentTracks = lastfmRecentTracks.Select(RecentTrackWithSource.FromLastFmObject).ToList();
+      if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
+        ApplyMusicSource(recentTracks);
+      }
+      return recentTracks;
+    }
+
+    private void ApplyMusicSource(List<RecentTrackWithSource> recentTracks) {
+      var playingFrom = service.FindMusicSource(Config.Instance.LastFmUser);
       var currentTrack = recentTracks.First(rt => rt.IsNowPlaying);
       currentTrack.MusicServiceName = playingFrom.MusicServiceName;
       currentTrack.MusicServiceUrl = playingFrom.MusicServiceUrl;

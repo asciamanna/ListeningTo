@@ -5,12 +5,12 @@ using System.Web;
 using LastfmClient.Responses;
 
 namespace ListeningTo.Repositories {
-  public class CombinedRecentTrack : LastfmUserRecentTrack {
+  public class RecentTrackWithSource : LastfmUserRecentTrack {
     public string MusicServiceName { get; set; }
     public string MusicServiceUrl { get; set; }
 
-    public static CombinedRecentTrack FromLastFmObject(LastfmUserRecentTrack recentTrack) {
-      return new CombinedRecentTrack {
+    public static RecentTrackWithSource FromLastFmObject(LastfmUserRecentTrack recentTrack) {
+      return new RecentTrackWithSource {
         Album = recentTrack.Album,
         Artist = recentTrack.Artist,
         Name = recentTrack.Name,
