@@ -6,7 +6,7 @@ using ListeningTo.Repositories;
 
 namespace ListeningTo.Controllers {
   public class RecentTracksController : ApiController {
-    readonly ILastfmRepository repository;
+    private readonly ILastfmRepository repository;
 
     public RecentTracksController() : this(new LastfmRepository()) { }
 

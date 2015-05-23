@@ -2,7 +2,7 @@
 
 namespace ListeningTo.Repositories {
   public class ConfigScope : IDisposable {
-    IConfig oldConfig;
+    readonly IConfig oldConfig;
 
     public ConfigScope(IConfig config) {
       oldConfig = Config.Instance;

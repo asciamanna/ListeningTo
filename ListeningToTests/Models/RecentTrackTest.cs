@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using LastfmClient.Responses;
 using ListeningTo.Models;
 using ListeningTo.Repositories;
 using NUnit.Framework;
@@ -67,7 +65,7 @@ namespace ListeningToTests.Models {
       var combinedRecentTracks = new List<RecentTrackWithSource>();
 
       var results = RecentTrack.FromRepositoryObjects(combinedRecentTracks);
-      CollectionAssert.IsEmpty(results);
+      Assert.That(results, Is.Empty);
     }
   }
 }

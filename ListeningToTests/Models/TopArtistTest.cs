@@ -27,10 +27,8 @@ namespace ListeningToTests.Models {
 
     [Test]
     public void FromRepositoryObjects_When_There_Are_No_TopArtists_Returns_Empty_List() {
-      var lastfmTopArtists = new List<LastfmUserTopArtist>();
-
-      var results = TopArtist.FromRepositoryObjects(lastfmTopArtists);
-      CollectionAssert.IsEmpty(results);
+      var results = TopArtist.FromRepositoryObjects(new List<LastfmUserTopArtist>());
+      Assert.That(results, Is.Empty);
     }
   }
 }

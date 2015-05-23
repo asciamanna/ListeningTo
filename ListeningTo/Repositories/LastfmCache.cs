@@ -9,6 +9,11 @@ namespace ListeningTo.Repositories {
   }
 
   public class LastfmCache : ILastfmCache {
+    public const string RecentTracksCacheKey = "lastfmuser-recenttracks";
+    public const string TopArtistsCacheKey = "lastfmuser-topartists";
+    public const string ArtistInfoCacheKey = "lastfmartist-artistinfo";
+    public const string AlbumInfoCacheKey = "lastfmalbum-albuminfo";
+
     public void Insert(string key, object obj) {
       HttpRuntime.Cache.Insert(key, obj, null, DateTime.Now.AddMinutes(1), Cache.NoSlidingExpiration);
     }

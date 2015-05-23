@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using LastfmClient.Responses;
 using ListeningTo.Repositories;
 
 namespace ListeningTo.Models {
   public class RecentTrack {
-    private const string nowPlaying = "Now Playing";
+    private const string NowPlaying = "Now Playing";
 
     public string Name { get; set; }
     public string Artist { get; set; }
@@ -17,8 +16,8 @@ namespace ListeningTo.Models {
     public string MusicServiceName { get; set; }
     public string MusicServiceUrl { get; set; }
 
-    public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<RecentTrackWithSource> combinedRecentTracks) {
-      return combinedRecentTracks.Select(CreateTrack);
+    public static IEnumerable<RecentTrack> FromRepositoryObjects(IEnumerable<RecentTrackWithSource> tracksWithSource) {
+      return tracksWithSource.Select(CreateTrack);
     }
 
     private static RecentTrack CreateTrack(RecentTrackWithSource track) {
@@ -34,16 +33,13 @@ namespace ListeningTo.Models {
     }
 
     private static string PopulateLastPlayed(LastfmUserRecentTrack track) {
-      return track.IsNowPlaying ? nowPlaying : ConvertToLocalString(track.LastPlayed);
+      return track.IsNowPlaying ? NowPlaying : ConvertToLocalString(track.LastPlayed);
     }
     static string ConvertToLocalString(DateTime? date) {
       if (!date.HasValue) {
         return String.Empty;
       }
-      if (date.Value.Kind == DateTimeKind.Utc) {
-        return ConvertToEasternTime(date);
-      }
-      return date.Value.ToString("f");
+      return date.Value.Kind == DateTimeKind.Utc ? ConvertToEasternTime(date) : date.Value.ToString("f");
     }
 
     private static string ConvertToEasternTime(DateTime? date) {
@@ -53,10 +49,7 @@ namespace ListeningTo.Models {
 
     static TimeZoneInfo easternTimeZone = null;
     static TimeZoneInfo GetEasternTimeZone() {
-      if (easternTimeZone == null) {
-        easternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-      }
-      return easternTimeZone;
+      return easternTimeZone ?? (easternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
     }
   }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using LastfmClient.Responses;
 using ListeningTo.Models;
 using NUnit.Framework;
