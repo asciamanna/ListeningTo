@@ -1,6 +1,5 @@
-﻿using System;
-using LastfmClient.Responses;
-using ListeningTo.Models;
+﻿using ListeningTo.Models;
+using ListeningToTests.TestObjects;
 using NUnit.Framework;
 
 namespace ListeningToTests.Models {
@@ -9,12 +8,7 @@ namespace ListeningToTests.Models {
     [Test]
     public void FromRepositoryObject() {
 
-      var lastfmAlbumInfo = new LastfmAlbumInfo {
-        Artist = "Bobby Hutcherson",
-        Name = "Spiral",
-        ReleaseDate = new DateTime(1968, 5, 20),
-        WikiSummary = "Album summary goes here",
-      };
+      var lastfmAlbumInfo = TestAlbumInfo.Create();
 
       var result = AlbumInfo.FromRepositoryObject(lastfmAlbumInfo);
       Assert.That(result.Name, Is.EqualTo(lastfmAlbumInfo.Name));

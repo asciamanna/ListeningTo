@@ -2,6 +2,7 @@
 using System.Linq;
 using LastfmClient.Responses;
 using ListeningTo.Models;
+using ListeningToTests.TestObjects;
 using NUnit.Framework;
 
 namespace ListeningToTests.Models {
@@ -9,10 +10,7 @@ namespace ListeningToTests.Models {
   public class TopArtistTest {
     [Test]
     public void FromRepositoryObjects() {
-      var lastfmTopArtists = new List<LastfmUserTopArtist> {
-          new LastfmUserTopArtist { Name = "Miles Davis", PlayCount = 3500, Rank = 1, LargeImageLocation = "here" },
-          new LastfmUserTopArtist { Name = "Devo", PlayCount = 3000, Rank = 2, LargeImageLocation = "there" }
-        };
+      var lastfmTopArtists = TestTopArtist.CreateTopArtistCollection();
 
       var results = TopArtist.FromRepositoryObjects(lastfmTopArtists);
       Assert.That(results.Count(), Is.EqualTo(lastfmTopArtists.Count()));

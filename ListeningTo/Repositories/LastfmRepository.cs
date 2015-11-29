@@ -23,11 +23,11 @@ namespace ListeningTo.Repositories {
     }
 
     public IEnumerable<RecentTrackWithSource> FindRecentTracks(int count) {
-      var recentTracks = new List<RecentTrackWithSource>();
+      List<RecentTrackWithSource> recentTracks;
       var cachedTracks = cache.Get(LastfmCache.RecentTracksCacheKey);
 
       if (cachedTracks == null) {
-        recentTracks = RetrieveRecentTracksWithSource(count, recentTracks);
+        recentTracks = RetrieveRecentTracksWithSource(count);
         cache.Insert(LastfmCache.RecentTracksCacheKey, recentTracks);
       }
       else {
@@ -36,13 +36,13 @@ namespace ListeningTo.Repositories {
       return recentTracks;
     }
 
-    private List<RecentTrackWithSource> RetrieveRecentTracksWithSource(int count, List<RecentTrackWithSource> recentTracks) {
+    private List<RecentTrackWithSource> RetrieveRecentTracksWithSource(int count) {
       var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
-      recentTracks = lastfmRecentTracks.Select(RecentTrackWithSource.FromLastFmObject).ToList();
+      var tracksWithSource = lastfmRecentTracks.Select(RecentTrackWithSource.FromLastFmObject).ToList();
       if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
-        ApplyMusicSource(recentTracks);
+        ApplyMusicSource(tracksWithSource);
       }
-      return recentTracks;
+      return tracksWithSource;
     }
 
     private void ApplyMusicSource(List<RecentTrackWithSource> recentTracks) {

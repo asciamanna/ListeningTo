@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ListeningTo.Models;
 using ListeningTo.Repositories;
+using ListeningToTests.TestObjects;
 using NUnit.Framework;
 
 namespace ListeningToTests.Models {
@@ -12,7 +13,7 @@ namespace ListeningToTests.Models {
     public void FromRepositoryObjects() {
       var expectedUtcDate = new DateTime(2014, 5, 26, 6, 40, 0, DateTimeKind.Utc);
 
-      var combinedRecentTracks = CreateRepositoryRecentTracks(expectedUtcDate);
+      var combinedRecentTracks = TestRecentTrackWithSource.CreateRepositoryRecentTracks(expectedUtcDate);
 
       var results = RecentTrack.FromRepositoryObjects(combinedRecentTracks);
 
@@ -27,14 +28,6 @@ namespace ListeningToTests.Models {
       Assert.That(result.LastPlayed, Is.StringStarting("Monday, May 26, 2014"));
       Assert.That(result.MusicServiceName, Is.EqualTo(expected.MusicServiceName));
       Assert.That(result.MusicServiceUrl, Is.EqualTo(expected.MusicServiceUrl));
-    }
-
-    private static List<RecentTrackWithSource> CreateRepositoryRecentTracks(DateTime expectedUtcDate) {
-      var combinedRecentTracks = new List<RecentTrackWithSource> {
-          new RecentTrackWithSource { Album = "Milestones", LargeImageLocation = "here", Artist = "Miles Davis", LastPlayed = expectedUtcDate, Name = "Dr. Jackle", MusicServiceUrl = "http://www.spotify.com", MusicServiceName = "Spotify" },
-          new RecentTrackWithSource { Album = "Freedom Of Choice", LargeImageLocation = "there", Artist = "Devo", LastPlayed = expectedUtcDate, Name = "Gates of Steel"}
-        };
-      return combinedRecentTracks;
     }
 
     [Test]

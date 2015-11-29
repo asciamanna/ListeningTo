@@ -1,6 +1,6 @@
-﻿using System;
-using LastfmClient.Responses;
+﻿using LastfmClient.Responses;
 using ListeningTo.Repositories;
+using ListeningToTests.TestObjects;
 using NUnit.Framework;
 
 namespace ListeningToTests.Repositories {
@@ -10,17 +10,7 @@ namespace ListeningToTests.Repositories {
 
     [SetUp]
     public void SetUp() {
-      recentTrack = new LastfmUserRecentTrack {
-        Artist = "Faith No More",
-        Album = "The Real Thing",
-        Name = "Zombie Eaters",
-        IsNowPlaying = true,
-        LastPlayed = DateTime.Now,
-        SmallImageLocation = "small location",
-        MediumImageLocation = "Medium location",
-        LargeImageLocation = "large location",
-        ExtraLargeImageLocation = "extra large location",
-      };
+     recentTrack = TestLastfmUserRecentTrack.Create();
     }
 
     [Test]
