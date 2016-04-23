@@ -35,7 +35,7 @@ namespace ListeningTo.Controllers {
     }
 
     private IHttpActionResult HandleLastfmException(LastfmException e) {
-      if (e.ErrorCode == 6 && e.Message == "Album not found") {
+      if (e.ErrorCode == ErrorCodes.InvalidParameter && e.Message == "Album not found") {
         return NotFound();
       }
       return InternalServerError(e);

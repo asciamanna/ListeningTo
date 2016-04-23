@@ -51,7 +51,7 @@ namespace ListeningToTests {
 
       var recentTracks = repository.FindRecentTracks(1);
 
-      CollectionAssert.AreEqual(expectedTracks, recentTracks);
+      Assert.That(recentTracks, Is.EquivalentTo(expectedTracks));
     }
 
     [Test]

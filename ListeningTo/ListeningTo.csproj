@@ -93,6 +93,7 @@
     <Compile Include="Controllers\ArtistInfoController.cs" />
     <Compile Include="Controllers\RecentTracksController.cs" />
     <Compile Include="Controllers\TopArtistsController.cs" />
+    <Compile Include="ErrorCodes.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
