@@ -50,6 +50,9 @@ build/
 [Bb]in/
 [Oo]bj/
 
+#VS 2015
+.vs/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
