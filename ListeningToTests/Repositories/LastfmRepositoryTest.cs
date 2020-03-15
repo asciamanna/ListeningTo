@@ -55,30 +55,6 @@ namespace ListeningToTests {
     }
 
     [Test]
-    public void FindRecentTracks_Gets_MusicService_Info_If_Track_Is_Currently_Playing() {
-      var service = MockRepository.GenerateStub<ILastfmService>();
-      var cache = MockRepository.GenerateStub<ILastfmCache>();
-      var config = MockRepository.GenerateStub<IConfig>();
-      var expectedTracks = new List<LastfmUserRecentTrack> {
-        new LastfmUserRecentTrack { IsNowPlaying = true },
-      };
-      var lastfmUser = "me";
-      var musicSource = new LastfmMusicSource { MusicServiceName = "Spotify", MusicServiceUrl = "http://www.spotify.com"};
-
-      config.Stub(c => c.LastFmUser).Return(lastfmUser);
-      service.Stub(s => s.FindRecentTracks(lastfmUser, 1)).Return(expectedTracks);
-      service.Stub(s => s.FindMusicSource(lastfmUser)).Return(musicSource);
-      
-      using (new ConfigScope(config)) {
-        var repository = new LastfmRepository(service, cache);
-        var recentTrack = repository.FindRecentTracks(1).First();
-
-        Assert.That(recentTrack.MusicServiceName, Is.EqualTo(musicSource.MusicServiceName));
-        Assert.That(recentTrack.MusicServiceUrl, Is.EqualTo(musicSource.MusicServiceUrl));
-      }
-    }
-
-    [Test]
     public void FindTopArtists_Adds_Results_To_Cache_And_Returns_Them() {
       var service = MockRepository.GenerateStub<ILastfmService>();
       var cache = MockRepository.GenerateMock<ILastfmCache>();

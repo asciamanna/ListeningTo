@@ -2,6 +2,7 @@
 using System.Linq;
 using LastfmClient;
 using LastfmClient.Responses;
+using System;
 
 namespace ListeningTo.Repositories {
   public interface ILastfmRepository {
@@ -38,22 +39,11 @@ namespace ListeningTo.Repositories {
 
     private List<RecentTrackWithSource> RetrieveRecentTracksWithSource(int count) {
       var lastfmRecentTracks = service.FindRecentTracks(Config.Instance.LastFmUser, count);
-      var tracksWithSource = lastfmRecentTracks.Select(RecentTrackWithSource.FromLastFmObject).ToList();
-      if (lastfmRecentTracks.Any(rt => rt.IsNowPlaying)) {
-        ApplyMusicSource(tracksWithSource);
-      }
-      return tracksWithSource;
-    }
-
-    private void ApplyMusicSource(List<RecentTrackWithSource> recentTracks) {
-      var playingFrom = service.FindMusicSource(Config.Instance.LastFmUser);
-      var currentTrack = recentTracks.First(rt => rt.IsNowPlaying);
-      currentTrack.MusicServiceName = playingFrom.MusicServiceName;
-      currentTrack.MusicServiceUrl = playingFrom.MusicServiceUrl;
+      return lastfmRecentTracks.Select(RecentTrackWithSource.FromLastFmObject).ToList();
     }
 
     public IEnumerable<LastfmUserTopArtist> FindTopArtists(int count) {
-      var topArtists = new List<LastfmUserTopArtist>();
+      List<LastfmUserTopArtist> topArtists;
       var cachedArtists = cache.Get(LastfmCache.TopArtistsCacheKey);
 
       if (cachedArtists == null) {
